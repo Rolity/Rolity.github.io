@@ -73,52 +73,14 @@
       
         <p>主要介绍了java中几种相关的数据流</p>
 <h2 id="字节流类：InputStream和OutputStream"><a href="#字节流类：InputStream和OutputStream" class="headerlink" title="字节流类：InputStream和OutputStream"></a>字节流类：InputStream和OutputStream</h2><p>字节流提供了处理字节的输入/输出方法，如在读写二进制数据时就要使用字节流。顶层的是两个抽象类是：InputStream(输入流)和OutputStream(输出流)。这两个抽象类派生出来的具体子类提供了读写各种不同设备如磁盘文件的功能。</p>
-<h3 id="一、字节输入流类（OutputStream）"><a href="#一、字节输入流类（OutputStream）" class="headerlink" title="一、字节输入流类（OutputStream）"></a>一、字节输入流类（OutputStream）</h3><p>字节输入流类的作用就是从外部设备获取字节数据到计算机内存中。</p>
-<p>InputStream类中常用的方法：</p>
-<ol>
-<li><p>int read() 从输入流的当前位置读取输入流的下一个字节，返回读入的字节数据；如果已经读取到输入流的末端，返回-1。这个方法返回的数据是字节数据和其他两个不一样，谨记</p>
-</li>
-<li><p>int read(byte b[ ]) 将输入流读到字节数组中，返回读入的字节数。</p>
-</li>
-<li><p>int read(byte b[ ] ,int off, int len)从输入流中读取len个字节到字节数组b[ ]中，读到的第一个字节放在off处，返回读入的字节数；如果off + len 大于b.length，或者off 和len中有一个是负数，那么会抛出indexOutOfBoundsException。</p>
-</li>
-<li><p>long skip(long n)从输入流中跳过n个字节，返回跳过的字节数；执行skip()方法后，接着使用read()方法及安徽读取第n+1个字节。</p>
-</li>
-<li><p>abstract void close() 关闭输入流，释放资源。对流的读取结束后应显示的调用该方法。</p>
-</li>
-<li><p>reset()方法和mark()方法：成对使用。</p>
-</li>
-</ol>
-<p>mark()方法：给流的当前位置做一个标记<br>reset()方法：给流回到上次使用mark()方法后的标记处。<br>并非所有的流都支持reset()方法和mark()方法，使用markSupportted()方法来判断某个流是否支持reset/mark操作<br>抽象类InputStream中的方法，在发生错误时都会抛出IOException异常，而且这个抽象类定义的方法都可以被它们所有的子类继承使用。</p>
-<p>字节输入流的子类：</p>
-<p>FileInputStream读取文件输入流，FilterInputStream建立可过滤的输入流</p>
-<ol>
-<li>FilterInputStream成为字节过滤输入流，是一个常用的字节输入流类，他爸另一个输入流作为流的来源，FilterInputStream的子类：1.DataInputStream提供一些基于多字节的读取方法，从而可以读取基本类型的数据</li>
-<li>BufferedInputStream为其他输入流增加功能，能够提高读取速度</li>
-</ol>
-<p>在Java语言应用程序中，经常会用到DataInputStream类和BufferedInputStream类的构造方法以完成输入操作。<br>DataInputStream类提供的构造方法如下：<br>DataInputStream(InputStream in);<br>参数in为底层输入流，通常与一个具体的设备相关联，该方法的功能是建立一个新的数据输入流以从指定的输入流读出数据。</p>
-<p>BufferedInputStream类提供的构造方法如下：</p>
-<ol>
-<li>public BufferedInputStream(InputStream in) 参数in为底层输入流，通常与一个具体的设备相关联，该方法的功能是创建一个缓冲输入流并保存在参数in中供以后使用，同时也建立起来一个缓冲数组并保留在buf中(buf是缓冲输入流类的成员变量，是一个字节类型的数组，用于存储数据的内部缓冲区)。</li>
-<li>public BufferedInputStream(InputStream in,int size) 参数in为底层输入流，通常与一个具体的设备相关联，size为缓冲区大小。该方法的功能是以指定的缓冲区大小创建一个缓冲输入流，并保存在参数in中供以后使用。一个长度为size的内部缓冲区数组也建立起来并保存在buf中。</li>
-</ol>
-<h3 id="二、字节输出流类（OutputStream）"><a href="#二、字节输出流类（OutputStream）" class="headerlink" title="二、字节输出流类（OutputStream）"></a>二、字节输出流类（OutputStream）</h3><p>字节输出流类的作用就是将暂存在计算机内存中的数据输出到外部设备。字节过滤输出流派生的子类：</p>
-<p>FileOutputStream写入文件输出流</p>
-<p>void write(int b)将整数b的低8位写入输出流；<br>void write(byte b[ ])将字节数组写入输出；<br>oid write(byte b[ ],int off,int len)从字节数组b的off处开始向输入流写入len个字节；<br>abstract void flush()强制将输出流保存在缓冲区中的数据写入目标数据源；<br>abstract void close()先调用flush()方法，然后关闭输出流，释放资源。<br>DataOutStream对这个过滤数据输出流可以写入任何符合Java数据类型的信息，这些信息可以被该类的方法读取。</p>
-<p>public DataOutputStream(OutputStream out) 参数out为底层输出流，通常与一个具体的设备相关联。该方法的功能是建立一个新的数据输出流以写数据到指定的底层输出流中。</p>
-<p>BufferedOutputStream为输出流提供缓冲式过滤流，缓冲区大小可以通过入口参数指定，也可以固定为512字节。</p>
-<p>public BufferedOutputStream(OutputStream out)参数out为底层输出流，通常与一个具体的设备相关联，该方法的功能是建立一个新的缓冲输出流以写数据到指定的底层输出流，其缓冲区大小默认为512字节<br>public BufferedOutputStream(OutputStream out,int size)参数out为底层输出流，通常与一个具体的设备相关联，参数size为缓冲区的大小。该方法的功能是以指定的缓冲区大小建立一个新的缓冲输出流，用于写数据到指定的底层输出流。</p>
-<h3 id="三、流的异常处理"><a href="#三、流的异常处理" class="headerlink" title="三、流的异常处理"></a>三、流的异常处理</h3><p>使用输入输出流时，可能会出现IOException异常，通常要使用Java的异常处理机制：</p>
-<p>try{</p>
-<p>//与流操作相关的代码</p>
-<p>}catch(IOException e){</p>
-<p>//处理异常的代码</p>
-<p>}finally{</p>
-<p>xxx.close();</p>
-<p>};</p>
-
       
     </div>
+    
+    <footer>
+      <div class="alignleft">
+        <a href="/2016/05/15/wenzhang01/#more" class="more-link">More</a>
+      </div>
+    </footer>
     
     <footer>
         <div class="alignright">
@@ -197,7 +159,7 @@
 
   
 <div class="widget tag">
-  <h3 class="title">Entradas Recientes</h3>
+  <h3 class="title">Neueste Artikel</h3>
   <ul class="entry">
     
       <li>
